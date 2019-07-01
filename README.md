@@ -9,5 +9,5 @@ Currently includes:
 - System clock
 
 ### Imports
-pip install psutil
+pip install psutil<br>
 pip install uptime
