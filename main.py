@@ -4,7 +4,7 @@ from widgets import *
 			
 # MAIN
 root = Tk()
-root.geometry("220x110+400+200")		# Window size and position
+root.geometry("+400+200")		# Window size and position
 root.resizable(False, False)			# Disable window resize
 root.title("sysmon")				# Window title
 root.attributes("-topmost", "true")		# Defaults window to "Always On Top"
