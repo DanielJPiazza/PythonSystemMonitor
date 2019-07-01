@@ -1,4 +1,4 @@
-# PythonSystemMonitor
+# Python System Monitor
 System monitor GUI written in Python.
 
 ### Imports
