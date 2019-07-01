@@ -94,14 +94,14 @@ class GUI:
 		
 		# CPU (red text when >90%)
 		self.cpu_label_value.configure(text=cpu)
-		if (cpu > 90.0):
+		if (cpu >= 90.0):
 			self.cpu_label_value.configure(fg="red")
 		else:
 			self.cpu_label_value.configure(fg="black")
 		
 		# MEMORY (red text when >90%)
 		self.virtual_memory_label_value.configure(text=memory)
-		if (memory > 90.0):
+		if (memory >= 90.0):
 			self.virtual_memory_label_value.configure(fg="red")
 		else:
 			self.virtual_memory_label_value.configure(fg="black")
@@ -115,7 +115,7 @@ class GUI:
 		# SYSTEM CLOCK
 		self.time_label_value.configure(text=time)
 		
-		self.master.after(1000, self.get_metrics)	# Continue to call this function every second.
+		self.master.after(1000, self.get_metrics)	# Continue calling this function every second.
 		
 	def update_on_top(self):
 		"""Set if window is Always On Top (master.attributes('-topmost')) based on checkbox."""
