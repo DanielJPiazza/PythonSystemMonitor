@@ -2,7 +2,6 @@
 from tkinter import *
 from datetime import datetime
 from uptime import boottime
-from math import floor
 import psutil as psu
 
 # WIDGETS
