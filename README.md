@@ -1,2 +1,5 @@
 # PythonSystemMonitor
-System monitor GUi written in Python.
+System monitor GUI written in Python.
+
+### Imports
+pip install psutil
