@@ -27,21 +27,21 @@ class GUI:
             Label(self.master, text="CPU (%):", font=self.font_label),                   # CPU
             Label(self.master, text="Memory (%):", font=self.font_label),                # MEMORY
             Label(self.master, text="Uptime:", font=self.font_label),                    # UPTIME
-            Label(self.master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
             Label(self.master, text="System Clock:", font=self.font_label),              # SYSTEM CLOCK
-            Button(self.master, text="EXIT", font=self.font_value, command=root.quit)  # EXIT BUTTON
+            Label(self.master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
+            Button(self.master, text="EXIT", font=self.font_value, command=root.quit)    # EXIT BUTTON
         ]
 
         # Create initial widget values and ALWAYS ON TOP button.
         self.on_top_check = IntVar(value=1)  # Initial state for ALWAYS ON TOP button. Defaults to checked.
         self.gui_widget_values = [
-            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),        # CPU
-            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),  # MEMORY
-            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value), # UPTIME
-            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),       # BOOT TIME
+            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),         # CPU
+            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),   # MEMORY
+            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),  # UPTIME
+            Label(self.master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),    # SYSTEM CLOCK
+            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),        # BOOT TIME
                   font=self.font_value),
-            Label(self.master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),   # SYSTEM CLOCK
-            Checkbutton(self.master, text="Always On Top", font=self.font_value,                  # ALWAYS ON TOP BUTTON
+            Checkbutton(self.master, text="Always On Top", font=self.font_value,                   # ALWAYS TOP BUTTON
                         variable=self.on_top_check, command=self.update_on_top)
         ]
 
@@ -81,8 +81,8 @@ class GUI:
         # UPTIME
         self.gui_widget_values[2].configure(text=uptime_var)
 
-        # CLOCK
-        self.gui_widget_values[4].configure(text=time)
+        # SYSTEM CLOCK
+        self.gui_widget_values[3].configure(text=time)
 
         self.master.after(1000, self.get_metrics)  # Continue calling this function every second.
 
