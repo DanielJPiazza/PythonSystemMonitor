@@ -14,9 +14,9 @@ class GUI:
         # Font variables.
         # font_label is applied to each label in col 0 (metrics).
         # font_value is applied to each label in col 1 (values).
-        self.font_family = 'Helvetica'
-        self.font_size = '9'
-        self.font_label = (self.font_family, self.font_size, 'bold')
+        self.font_family = "Helvetica"
+        self.font_size = "9"
+        self.font_label = (self.font_family, self.font_size, "bold")
         self.font_value = (self.font_family, self.font_size)
 
         # Create widget labels and EXIT button.
@@ -84,7 +84,7 @@ class GUI:
         self.master.after(1000, self.get_metrics)  # Continue calling this function every second.
 
     def update_on_top(self):
-        """Set if window is Always On Top (master.attributes('-topmost')) based on checkbox."""
+        """Set if window is Always On Top (master.attributes("-topmost")) based on checkbox."""
         if self.on_top_check.get() == 1:
             self.master.attributes("-topmost", "true")
         else:
