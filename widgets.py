@@ -1,6 +1,7 @@
 # IMPORTS
 from datetime import datetime
 from tkinter import *
+import os
 
 import psutil as psu
 from uptime import boottime
@@ -35,11 +36,11 @@ class GUI:
         # Create initial widget values and ALWAYS ON TOP button.
         self.on_top_check = IntVar(value=1)  # Initial state for ALWAYS ON TOP button. Defaults to checked.
         self.gui_widget_values = [
-            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),         # CPU
-            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),   # MEMORY
-            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),  # UPTIME
-            Label(self.master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),    # SYSTEM CLOCK
-            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),        # BOOT TIME
+            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),           # CPU
+            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),     # MEMORY
+            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),    # UPTIME
+            Label(self.master, text=datetime.now().strftime("%#I:%M:%S %p"), font=self.font_value),  # SYSTEM CLOCK
+            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %#I:%M:%S %p")),      # BOOT TIME
                   font=self.font_value),
             Checkbutton(self.master, text="Always On Top", font=self.font_value,                   # ALWAYS TOP BUTTON
                         variable=self.on_top_check, command=self.update_on_top)
@@ -61,8 +62,8 @@ class GUI:
         # Gather metrics.
         cpu = psu.cpu_percent()
         memory = psu.virtual_memory()[2]
-        uptime_var = str(datetime.now() - boottime())[:-7]
-        time = datetime.now().strftime("%H:%M:%S")
+        uptime_var = (str(datetime.now() - boottime())[:-7])
+        time = datetime.now().strftime("%#I:%M:%S %p")
 
         # CPU (red text when >90%)
         self.gui_widget_values[0].configure(text=cpu)
