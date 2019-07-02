@@ -9,19 +9,21 @@ from uptime import boottime
 
 # WIDGETS
 class GUI:
+    """Builds main GUI."""
     def __init__(self, root):
         # self.master is a frame that's a child of root for window padding purposes.
         # Widget grid layouts are children of self.master.
         self.master = Frame(root, padx=10, pady=10)
         self.master.grid()
 
-        # Font variables.
+        # Font and other layout variables.
         # font_label is applied to each label in col 0 (metrics).
         # font_value is applied to each label in col 1 (values).
         self.font_family = "Helvetica"
         self.font_size = "9"
         self.font_label = (self.font_family, self.font_size, "bold")
         self.font_value = (self.font_family, self.font_size)
+        self.whitespace_height = 12
 
         # Change time format for different operating systems.
         if os.name == "nt":
@@ -31,12 +33,14 @@ class GUI:
 
         # Create widget labels and EXIT button.
         self.gui_widget_metrics = [
-            Label(self.master, text="CPU (%):", font=self.font_label),                   # CPU
-            Label(self.master, text="Memory (%):", font=self.font_label),                # MEMORY
-            Label(self.master, text="Uptime:", font=self.font_label),                    # UPTIME
-            Label(self.master, text="System Clock:", font=self.font_label),              # SYSTEM CLOCK
-            Label(self.master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
-            Button(self.master, text="EXIT", font=self.font_value, command=root.quit)    # EXIT BUTTON
+            Label(self.master, text="CPU (%):", font=self.font_label),          # CPU
+            Label(self.master, text="Memory (%):", font=self.font_label),       # MEMORY
+            Label(self.master, text="Uptime:", font=self.font_label),           # UPTIME
+            Label(self.master, text="System Clock:", font=self.font_label),     # SYSTEM CLOCK
+            Label(self.master, text="Boot Time:", font=self.font_label),        # BOOT TIME
+            Frame(self.master, height=self.whitespace_height),                 # WHITESPACE
+            Button(self.master, text="EXIT", font=self.font_value,
+                   bg="white smoke", command=root.quit)                         # EXIT BUTTON
         ]
 
         # Create initial widget values and ALWAYS ON TOP button.
@@ -46,20 +50,29 @@ class GUI:
             Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),   # MEMORY
             Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),  # UPTIME
             Label(self.master, text=datetime.now().strftime("{}".format(self.time_format)),
-                  font=self.font_value),                                            # SYSTEM CLOCK
+                  font=self.font_value),                                                       # SYSTEM CLOCK
             Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, {}".format(self.time_format))),
-                  font=self.font_value),                                            # BOOT TIME
+                  font=self.font_value),                                                       # BOOT TIME
+            Frame(self.master, height=self.whitespace_height),                                # WHITESPACE
             Checkbutton(self.master, text="Always On Top", font=self.font_value,
-                        variable=self.on_top_check, command=self.update_on_top)     # ALWAYS ON TOP BUTTON
+                        variable=self.on_top_check, command=self.update_on_top)                # ALWAYS ON TOP BUTTON
         ]
 
         # Loop through widgets and display on grid (col 0 - metrics).
         for index, label in list(enumerate(self.gui_widget_metrics)):
-            label.grid(sticky="w", row=index, column=0, padx=(8, 0), pady=(2, 0))
+            # if index == EXIT button, center button in cell
+            if index == 6:
+                label.grid(sticky="nsew", row=index, column=0, padx=(8, 0))
+            else:
+                label.grid(sticky="w", row=index, column=0, padx=(8, 0), pady=(1, 0))
 
         # Loop through widgets and display on grid (col 1 - values).
         for index, label in list(enumerate(self.gui_widget_values)):
-            label.grid(sticky="w", row=index, column=1, padx=(16, 8), pady=(2, 0))
+            # if index == ALWAYS ON TOP checkbox, center checkbox in cell
+            if index == 6:
+                label.grid(sticky="nsew", row=index, column=1, padx=(16, 8))
+            else:
+                label.grid(sticky="w", row=index, column=1, padx=(16, 8), pady=(1, 0))
 
         # Start system metric update loop - calls self.get_metrics().
         root.after(1000, self.get_metrics)
