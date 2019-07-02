@@ -9,6 +9,8 @@ from uptime import boottime
 # WIDGETS
 class GUI:
     def __init__(self, root):
+        # self.master is a frame that's a child of root for window padding purposes.
+        # Widget grid layouts are children of self.master.
         self.master = Frame(root, padx=10, pady=10)
         self.master.grid()
 
