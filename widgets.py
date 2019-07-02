@@ -12,76 +12,43 @@ class GUI:
         self.master = master
 
         # Font variables.
+        # font_label is applied to each label in col 0 (metrics).
+        # font_value is applied to each label in col 1 (values).
         self.font_family = 'Helvetica'
         self.font_size = '9'
         self.font_label = (self.font_family, self.font_size, 'bold')
         self.font_value = (self.font_family, self.font_size)
 
-        # Lists for GUI widgets.
-        self.gui_widgets = []
-        self.gui_value_widgets = []
+        # Create widget labels and EXIT button.
+        self.gui_widget_metrics = [
+            Label(master, text="CPU (%):", font=self.font_label),                   # CPU
+            Label(master, text="Memory (%):", font=self.font_label),                # MEMORY
+            Label(master, text="Uptime:", font=self.font_label),                    # UPTIME
+            Label(master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
+            Label(master, text="System Clock:", font=self.font_label),              # SYSTEM CLOCK
+            Button(master, text="EXIT", font=self.font_value, command=master.quit)  # EXIT BUTTON
+        ]
 
-        # Variable structure is the same for most widgets.
+        # Create initial widget values and ALWAYS ON TOP button.
+        self.on_top_check = IntVar(value=1)  # Initial state for ALWAYS ON TOP button. Defaults to checked.
+        self.gui_widget_values = [
+            Label(master, text="{}".format(psu.cpu_percent()), font=self.font_value),           # CPU
+            Label(master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),     # MEMORY
+            Label(master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),    # UPTIME
+            Label(master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),          # BOOT TIME
+                  font=self.font_value),
+            Label(master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),      # SYSTEM CLOCK
+            Checkbutton(master, text="Always On Top", font=self.font_value,                     # ALWAYS ON TOP BUTTON
+                        variable=self.on_top_check, command=self.update_on_top)
+        ]
 
-        # CPU
-        self.cpu_label_text = "CPU (%)"
-        self.cpu_label = Label(master, text="{}:".format(self.cpu_label_text), font=self.font_label)
-        self.cpu_label_value = Label(master, text="{}".format(psu.cpu_percent()), font=self.font_value)
-        self.gui_widgets.append(self.cpu_label)
-        self.gui_value_widgets.append(self.cpu_label_value)
+        # Loop through widgets and display on grid (col 0 - metrics).
+        for index, label in list(enumerate(self.gui_widget_metrics)):
+            label.grid(sticky="w", row=index, column=0, padx=(8, 0), pady=(2, 0))
 
-        # VIRTUAL MEMORY
-        self.mem_label_text = "Memory (%)"
-        self.virtual_memory_label = Label(master, text="{}:".format(self.mem_label_text), font=self.font_label)
-        self.virtual_memory_label_value = Label(master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value)
-        self.gui_widgets.append(self.virtual_memory_label)
-        self.gui_value_widgets.append(self.virtual_memory_label_value)
-
-        # UPTIME
-        self.uptime_text = "Uptime"
-        self.uptime_value = str(datetime.now() - boottime())[:-7]
-        self.uptime_label = Label(master, text="{}:".format(self.uptime_text), font=self.font_label)
-        self.uptime_label_value = Label(master, text=self.uptime_value, font=self.font_value)
-        self.gui_widgets.append(self.uptime_label)
-        self.gui_value_widgets.append(self.uptime_label_value)
-
-        # BOOT TIME
-        self.boottime_text = "Boot Time"
-        self.boottime_label = Label(master, text="{}:".format(self.boottime_text), font=self.font_label)
-        self.boottime_label_value = Label(master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),
-                                          font=self.font_value)
-        self.gui_widgets.append(self.boottime_label)
-        self.gui_value_widgets.append(self.boottime_label_value)
-
-        # SYSTEM CLOCK
-        self.time_label_text = "System Clock"
-        self.time_label = Label(master, text="{}:".format(self.time_label_text), font=self.font_label)
-        self.time_label_value = Label(master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value)
-        self.gui_widgets.append(self.time_label)
-        self.gui_value_widgets.append(self.time_label_value)
-
-        # Loop through widgets and add to grid (col 0).
-        self.count = 0
-        for i in self.gui_widgets:
-            i.grid(sticky="w", row=self.count, column=0, padx=(8, 0), pady=(2, 0))
-            self.count += 1
-        # Loop through widgets and add to grid (col 1).
-        self.count = 0
-        for i in self.gui_value_widgets:
-            i.grid(sticky="w", row=self.count, column=1, padx=(16, 8), pady=(2, 0))
-            self.count += 1
-
-        # Create exit button.
-        # Doesn't need a value and has custom position; not appended to GUI widget lists.
-        self.close_button = Button(master, text="EXIT", font=self.font_value, command=master.quit)
-        self.close_button.grid(row=self.count, column=0, sticky="w", padx=(8, 0), pady=(8, 8))
-
-        # Create toggle for "Always On Top" window.
-        # Doesn't need a value and has custom position; not appended to GUI widget lists.
-        self.on_top_check = IntVar(value=1)  # Defaults to checked.
-        self.always_on_top = Checkbutton(master, text="Always On Top", font=self.font_value, variable=self.on_top_check,
-                                         command=self.update_on_top)
-        self.always_on_top.grid(row=self.count, column=1, sticky="w", padx=(14, 0), pady=(8, 8))
+        # Loop through widgets and display on grid (col 1 - values).
+        for index, label in list(enumerate(self.gui_widget_values)):
+            label.grid(sticky="w", row=index, column=1, padx=(16, 8), pady=(2, 0))
 
         # Start system metric update loop - calls self.get_metrics().
         master.after(1000, self.get_metrics)
@@ -95,24 +62,24 @@ class GUI:
         time = datetime.now().strftime("%H:%M:%S")
 
         # CPU (red text when >90%)
-        self.cpu_label_value.configure(text=cpu)
+        self.gui_widget_values[0].configure(text=cpu)
         if cpu >= 90.0:
-            self.cpu_label_value.configure(fg="red")
+            self.gui_widget_values[0].configure(fg="red")
         else:
-            self.cpu_label_value.configure(fg="black")
+            self.gui_widget_values[0].configure(fg="black")
 
         # MEMORY (red text when >90%)
-        self.virtual_memory_label_value.configure(text=memory)
+        self.gui_widget_values[1].configure(text=memory)
         if memory >= 90.0:
-            self.virtual_memory_label_value.configure(fg="red")
+            self.gui_widget_values[1].configure(fg="red")
         else:
-            self.virtual_memory_label_value.configure(fg="black")
+            self.gui_widget_values[1].configure(fg="black")
 
         # UPTIME
-        self.uptime_label_value.configure(text=uptime_var)
+        self.gui_widget_values[2].configure(text=uptime_var)
 
-        # SYSTEM CLOCK
-        self.time_label_value.configure(text=time)
+        # CLOCK
+        self.gui_widget_values[4].configure(text=time)
 
         self.master.after(1000, self.get_metrics)  # Continue calling this function every second.
 
