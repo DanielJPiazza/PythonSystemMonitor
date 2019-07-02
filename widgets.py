@@ -23,6 +23,12 @@ class GUI:
         self.font_label = (self.font_family, self.font_size, "bold")
         self.font_value = (self.font_family, self.font_size)
 
+        # Change time format for different operating systems.
+        if os.name == "nt":
+            self.time_format = "%#I:%M:%S %p"
+        else:
+            self.time_format = "%-I:%M:%S %p"
+
         # Create widget labels and EXIT button.
         self.gui_widget_metrics = [
             Label(self.master, text="CPU (%):", font=self.font_label),                   # CPU
@@ -36,14 +42,15 @@ class GUI:
         # Create initial widget values and ALWAYS ON TOP button.
         self.on_top_check = IntVar(value=1)  # Initial state for ALWAYS ON TOP button. Defaults to checked.
         self.gui_widget_values = [
-            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),           # CPU
-            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),     # MEMORY
-            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),    # UPTIME
-            Label(self.master, text=datetime.now().strftime("%#I:%M:%S %p"), font=self.font_value),  # SYSTEM CLOCK
-            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %#I:%M:%S %p")),      # BOOT TIME
-                  font=self.font_value),
-            Checkbutton(self.master, text="Always On Top", font=self.font_value,                   # ALWAYS TOP BUTTON
-                        variable=self.on_top_check, command=self.update_on_top)
+            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),         # CPU
+            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),   # MEMORY
+            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),  # UPTIME
+            Label(self.master, text=datetime.now().strftime("{}".format(self.time_format)),
+                  font=self.font_value),                                            # SYSTEM CLOCK
+            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, {}".format(self.time_format))),
+                  font=self.font_value),                                            # BOOT TIME
+            Checkbutton(self.master, text="Always On Top", font=self.font_value,
+                        variable=self.on_top_check, command=self.update_on_top)     # ALWAYS ON TOP BUTTON
         ]
 
         # Loop through widgets and display on grid (col 0 - metrics).
@@ -63,7 +70,7 @@ class GUI:
         cpu = psu.cpu_percent()
         memory = psu.virtual_memory()[2]
         uptime_var = (str(datetime.now() - boottime())[:-7])
-        time = datetime.now().strftime("%#I:%M:%S %p")
+        time = datetime.now().strftime("{}".format(self.time_format))
 
         # CPU (red text when >90%)
         self.gui_widget_values[0].configure(text=cpu)
