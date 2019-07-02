@@ -92,7 +92,6 @@ class GUI:
         cpu = psu.cpu_percent()
         memory = psu.virtual_memory()[2]
         uptime_var = str(datetime.now() - boottime())[:-7]
-        boottime_var = boottime().strftime("%b %d %Y, %H:%M:%S")
         time = datetime.now().strftime("%H:%M:%S")
 
         # CPU (red text when >90%)
@@ -111,9 +110,6 @@ class GUI:
 
         # UPTIME
         self.uptime_label_value.configure(text=uptime_var)
-
-        # BOOT TIME
-        self.boottime_label_value.configure(text=boottime_var)
 
         # SYSTEM CLOCK
         self.time_label_value.configure(text=time)
