@@ -10,6 +10,6 @@ System monitor GUI written in Python.
 - System clock
 - Boot time
 
-### Imports
+### Dependencies
 pip install psutil<br>
 pip install uptime
