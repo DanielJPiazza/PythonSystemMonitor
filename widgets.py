@@ -8,8 +8,9 @@ from uptime import boottime
 
 # WIDGETS
 class GUI:
-    def __init__(self, master):
-        self.master = master
+    def __init__(self, root):
+        self.master = Frame(root, padx=10, pady=10)
+        self.master.grid()
 
         # Font variables.
         # font_label is applied to each label in col 0 (metrics).
@@ -21,24 +22,24 @@ class GUI:
 
         # Create widget labels and EXIT button.
         self.gui_widget_metrics = [
-            Label(master, text="CPU (%):", font=self.font_label),                   # CPU
-            Label(master, text="Memory (%):", font=self.font_label),                # MEMORY
-            Label(master, text="Uptime:", font=self.font_label),                    # UPTIME
-            Label(master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
-            Label(master, text="System Clock:", font=self.font_label),              # SYSTEM CLOCK
-            Button(master, text="EXIT", font=self.font_value, command=master.quit)  # EXIT BUTTON
+            Label(self.master, text="CPU (%):", font=self.font_label),                   # CPU
+            Label(self.master, text="Memory (%):", font=self.font_label),                # MEMORY
+            Label(self.master, text="Uptime:", font=self.font_label),                    # UPTIME
+            Label(self.master, text="Boot Time:", font=self.font_label),                 # BOOT TIME
+            Label(self.master, text="System Clock:", font=self.font_label),              # SYSTEM CLOCK
+            Button(self.master, text="EXIT", font=self.font_value, command=root.quit)  # EXIT BUTTON
         ]
 
         # Create initial widget values and ALWAYS ON TOP button.
         self.on_top_check = IntVar(value=1)  # Initial state for ALWAYS ON TOP button. Defaults to checked.
         self.gui_widget_values = [
-            Label(master, text="{}".format(psu.cpu_percent()), font=self.font_value),           # CPU
-            Label(master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),     # MEMORY
-            Label(master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),    # UPTIME
-            Label(master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),          # BOOT TIME
+            Label(self.master, text="{}".format(psu.cpu_percent()), font=self.font_value),        # CPU
+            Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),  # MEMORY
+            Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value), # UPTIME
+            Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, %H:%M:%S")),       # BOOT TIME
                   font=self.font_value),
-            Label(master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),      # SYSTEM CLOCK
-            Checkbutton(master, text="Always On Top", font=self.font_value,                     # ALWAYS ON TOP BUTTON
+            Label(self.master, text=datetime.now().strftime("%H:%M:%S"), font=self.font_value),   # SYSTEM CLOCK
+            Checkbutton(self.master, text="Always On Top", font=self.font_value,                  # ALWAYS ON TOP BUTTON
                         variable=self.on_top_check, command=self.update_on_top)
         ]
 
@@ -51,7 +52,7 @@ class GUI:
             label.grid(sticky="w", row=index, column=1, padx=(16, 8), pady=(2, 0))
 
         # Start system metric update loop - calls self.get_metrics().
-        master.after(1000, self.get_metrics)
+        root.after(1000, self.get_metrics)
 
     def get_metrics(self):
         """Update system metric GUI elements once per second."""
@@ -83,9 +84,9 @@ class GUI:
 
         self.master.after(1000, self.get_metrics)  # Continue calling this function every second.
 
-    def update_on_top(self):
+    def update_on_top(self, root):
         """Set if window is Always On Top (master.attributes("-topmost")) based on checkbox."""
         if self.on_top_check.get() == 1:
-            self.master.attributes("-topmost", "true")
+            root.attributes("-topmost", "true")
         else:
-            self.master.attributes("-topmost", "false")
+            root.attributes("-topmost", "false")
