@@ -1,13 +1,17 @@
 # Python System Monitor
-System monitor GUI written in Python.
+System monitor GUI written in Python 3.
 
-Currently includes:
+![sysmon_screenshot](https://user-images.githubusercontent.com/42113905/60553926-826aa280-9d03-11e9-8602-053e80abe4bc.PNG)
+
+<b>Currently includes:</b>
 - CPU %
 - Virtual memory %
 - Uptime
-- Boot time
 - System clock
+- Boot time
 
-### Imports
-pip install psutil<br>
+<b>Dependencies:</b>
+```
+pip install psutil
 pip install uptime
+```
