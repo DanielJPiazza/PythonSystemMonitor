@@ -1,6 +1,7 @@
 # IMPORTS
 from datetime import datetime
 from tkinter import *
+from functools import partial
 import os
 
 import psutil as psu
@@ -10,10 +11,10 @@ from uptime import boottime
 # WIDGETS
 class GUI:
     """Builds main GUI."""
-    def __init__(self, root):
-        # self.master is a frame that's a child of root for window padding purposes.
+    def __init__(self, master):
+        # self.master is a frame that's a child of master for window padding purposes.
         # Widget grid layouts are children of self.master.
-        self.master = Frame(root, padx=10, pady=10)
+        self.master = Frame(master, padx=10, pady=10)
         self.master.grid()
 
         # Font and other layout variables.
@@ -38,9 +39,9 @@ class GUI:
             Label(self.master, text="Uptime:", font=self.font_label),           # UPTIME
             Label(self.master, text="System Clock:", font=self.font_label),     # SYSTEM CLOCK
             Label(self.master, text="Boot Time:", font=self.font_label),        # BOOT TIME
-            Frame(self.master, height=self.whitespace_height),                 # WHITESPACE
+            Frame(self.master, height=self.whitespace_height),                  # WHITESPACE
             Button(self.master, text="EXIT", font=self.font_value,
-                   bg="white smoke", command=root.quit)                         # EXIT BUTTON
+                   bg="white smoke", command=master.quit)                       # EXIT BUTTON
         ]
 
         # Create initial widget values and ALWAYS ON TOP button.
@@ -50,12 +51,12 @@ class GUI:
             Label(self.master, text="{}".format(psu.virtual_memory()[2]), font=self.font_value),   # MEMORY
             Label(self.master, text=str(datetime.now() - boottime())[:-7], font=self.font_value),  # UPTIME
             Label(self.master, text=datetime.now().strftime("{}".format(self.time_format)),
-                  font=self.font_value),                                                       # SYSTEM CLOCK
+                  font=self.font_value),                                                           # SYSTEM CLOCK
             Label(self.master, text="{}".format(boottime().strftime("%b %d %Y, {}".format(self.time_format))),
-                  font=self.font_value),                                                       # BOOT TIME
-            Frame(self.master, height=self.whitespace_height),                                # WHITESPACE
-            Checkbutton(self.master, text="Always On Top", font=self.font_value,
-                        variable=self.on_top_check, command=self.update_on_top)                # ALWAYS ON TOP BUTTON
+                  font=self.font_value),                                                           # BOOT TIME
+            Frame(self.master, height=self.whitespace_height),                                     # WHITESPACE
+            Checkbutton(master=self.master, text="Always On Top", font=self.font_value,
+                        variable=self.on_top_check, command=partial(self.update_on_top, master))  # ALWAYS ON TOP BUTTON
         ]
 
         # Loop through widgets and display on grid (col 0 - metrics).
@@ -75,7 +76,7 @@ class GUI:
                 label.grid(sticky="w", row=index, column=1, padx=(16, 8), pady=(1, 0))
 
         # Start system metric update loop - calls self.get_metrics().
-        root.after(1000, self.get_metrics)
+        master.after(1000, self.get_metrics)
 
     def get_metrics(self):
         """Update system metric GUI elements once per second."""
