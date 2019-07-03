@@ -11,5 +11,7 @@ System monitor GUI written in Python.
 - Boot time
 
 <b>Dependencies:</b>
-<br>pip install psutil
-<br>pip install uptime
+```
+pip install psutil
+pip install uptime
+```
