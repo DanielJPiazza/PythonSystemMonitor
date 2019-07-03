@@ -1,5 +1,5 @@
 # Python System Monitor
-System monitor GUI written in Python.
+System monitor GUI written in Python 3.
 
 ![sysmon_screenshot](https://user-images.githubusercontent.com/42113905/60553926-826aa280-9d03-11e9-8602-053e80abe4bc.PNG)
 
